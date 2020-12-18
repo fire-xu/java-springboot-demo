@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+}
+
+.container {
+    float: left;
+}
+
+.left-container {
+    width: 50%;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.product-li {
+    height: 40px;
+    line-height: 40px;
+    /* padding: 2px; */
+    border-left: 5px solid blueviolet;
+    background-color: #ccc;
+    margin-bottom: 1px;
+    width: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.product-li .p-id-span {
+    color: coral;
+}
+
+.product-li .p-price-span {
+    font-weight: bold;
+}
+
+.product-li .p-count-input {
+    width: 100px;
+}

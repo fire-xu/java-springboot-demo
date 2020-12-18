@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+    <!--    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+    <script src="./vue.js"></script>
+    <script src="./axios.min.js"></script>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body>
+<div id="app">
+    <div class="left-container container">
+        {{productTitle}}
+        <button @click="refreshProduct">切换商品</button>
+        <div v-if="productList.length>0">
+            <!-- {{productList}} -->
+            <ul>
+                <li class="product-li" v-for="p  in productList" :key="p.productId">
+                    <span class="p-id-span">{{p.productId}}</span>
+                    <span class="p-price-span">{{p.price}}</span>
+                    <!-- <input class="p-count-input" type="text" value="1" > -->
+                    <button @click="collectProduct(p.productId)">收藏</button>
+                    <button @click="addToOrder(p.productId,p.price)">添加到订单</button>
+                </li>
+            </ul>
+        </div>
+        <div v-else>
+            no
+        </div>
+        <div>
+            <p> 用户 <input type="text" v-model="username">
+                <button @click="changeUser">切换用户</button>
+                <button @click="submitOrder">提交订单</button>
+                <button @click="revokeCurrentOrder">重置订单</button>
+            </p>
+        </div>
+        <div>
+            <p>
+            <h3>当前订单</h3>
+            <ol>
+                <li v-for="p in currentOrder">
+                    {{p.productId}} -- {{p.count}}
+                </li>
+            </ol>
+            </p>
+        </div>
+    </div>
+    <div class="right-container container">
+
+        <div>
+            <div>当前积分
+                <h4>{{points}}</h4>
+                <button @click="resetTotal">重置积分</button>
+            </div>
+            <p>
+            <h5>{{username}}'订单</h5>
+            <ol v-if="orderList.length>0">
+                <li v-for="c in orderList" :key="c.orderId">
+                    {{c.orderId}}
+                    <button @click="removeOrder(c.orderId)">取消</button>
+
+                </li>
+            </ol>
+            <div v-else>
+                订单为空
+            </div>
+            </p>
+        </div>
+        <div>
+            <p>
+            <h5>{{username}}'收藏</h5>
+            <ol v-if="collectList.length>0">
+                <li v-for="c in collectList" :key="c">
+                    <span> {{c}}</span>
+                    <button @click="removeCollectProduct(c)">移除</button>
+                </li>
+            </ol>
+            <div v-else>
+                收藏为空
+            </div>
+            </p>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    const unomi_server = "__server";
+    let url = window.localStorage.getItem(unomi_server)
+    if (!url) {
+        url = prompt("Server的地址")
+        // url = url ? url : 'http://localhost:8181'
+        if (url) {
+            window.localStorage.setItem(unomi_server, url)
+        }
+    }
+
+    // alert(url);
+
+
+    // -------------------------------------------
+    var instance = axios.create({
+        // baseURL: 'http://localhost:8080/',
+        timeout: 10000,
+        // headers: { 'X-Custom-Header': 'foobar' }
+    });
+    instance.interceptors.request.use(function (config) {
+        // 在发送请求之前做些什么
+        return config;
+    }, function (error) {
+        // 对请求错误做些什么
+        return Promise.reject(error);
+    });
+    // 添加响应拦截器
+    instance.interceptors.response.use(function (response) {
+        // 对响应数据做点什么
+        return response.data;
+    }, function (error) {
+        // 对响应错误做点什么
+        return Promise.reject(error);
+    });
+
+    // -------------------------------------------
+    var unomi = axios.create({
+        baseURL: url,
+        timeout: 10000,
+        // headers: { 'X-Custom-Header': 'foobar' }
+    });
+    unomi.interceptors.response.use(function (response) {
+        // 对响应数据做点什么
+        return response.data;
+    }, function (error) {
+        // 对响应错误做点什么
+        return Promise.reject(error);
+    });
+    //------------------------
+    const app = new Vue({
+        el: "#app",
+        data: {
+            productTitle: "商品列表",
+            productList: [],
+            // -------
+            username: "test",
+            currentOrder: [],
+            orderList: [],
+            collectList: [],
+            points: 0
+        },
+        created() {
+            this.refreshProduct()
+            this.refreshCollect()
+
+        },
+        mounted: () => {
+
+        }, methods: {
+            resetTotal() {
+                resetTotal(this.username).then(resp => {
+                    this.points = resp.profileProperties.points.total
+                })
+            },
+            refreshProduct() {
+                //发给 后台的,请求商品列表
+                instance.get('/products')
+                    .then(response => {
+                        if (response.code === 200) {
+                            // console.log(response.payload);
+                            this.productList = response.payload
+
+                            // 发给ampere,追踪view事件
+                            viewProduct(this.username, this.productList.map(e => e.productId))
+                                .then(resp => {
+                                    this.points = resp.profileProperties.points.total
+                                })
+                            // console.log(this.productList)
+                        }
+                    })
+            },
+            refreshCollect() {
+                let name = this.username
+                instance.get(`/profiles/${name}`)
+                    .then(r => {
+                        if (r.code == 200) {
+                            this.collectList = r.payload.collects
+                            this.orderList = r.payload.orders
+                        }
+                    })
+            },
+            collectProduct(pid) {
+                console.log(`collect ${pid}`);
+                let name = this.username
+                instance.post(`/profiles/${name}/collect`, {pid})
+                    .then(response => {
+                        if (response.code == 200) {
+                            collectProduct(this.username, [pid]).then(resp => {
+                                this.points = resp.profileProperties.points.total
+                            })
+                            this.refreshCollect()
+                        }
+                    })
+            },
+            removeCollectProduct(pid) {
+                console.log(`delete collect ${pid}`);
+                let name = this.username
+                instance.delete(`/profiles/${name}/collect/${pid}`)
+                    .then(response => {
+                        if (response.code == 200) {
+                            // TODO
+                            cancelCollectProduct(this.username, [pid]).then(resp => {
+                                this.points = resp.profileProperties.points.total
+                            })
+                            this.refreshCollect()
+                        }
+                    })
+            },
+            addToOrder(pid, price) {
+                console.log(`add to order  ${pid}`);
+                let f = false;
+                this.currentOrder.forEach(e => {
+                    if (e.productId == pid) {
+                        e.count = e.count + 1
+                        f = true
+                    }
+                });
+                if (!f) {
+                    this.currentOrder.push({
+                        productId: pid,
+                        price: price,
+                        count: 1
+                    })
+                }
+            },
+            revokeCurrentOrder() {
+                this.currentOrder = [];
+            },
+            submitOrder() {
+                if (this.currentOrder && this.currentOrder.length > 0) {
+                    console.log("submit", this.currentOrder);
+                    console.log(JSON.stringify(this.currentOrder));
+                    let name = this.username
+                    instance.post(`/profiles/${name}/orders`, this.currentOrder)
+                        .then(response => {
+                            if (response.code == 200) {
+                                console.log(response)
+                                this.currentOrder = []
+                                confirmOrder(this.username,
+                                    (d => {
+                                        let orders = []
+                                        orders.push(d)
+                                        return orders
+                                    })(response.payload)).then(resp => {
+                                    this.points = resp.profileProperties.points.total
+                                })
+                                this.refreshCollect()
+                            }
+                        })
+                }
+            },
+            removeOrder(oid) {
+                console.log(`delete order ${oid}`);
+                let name = this.username
+                instance.delete(`/profiles/${name}/orders/${oid}`)
+                    .then(response => {
+                        if (response.code == 200) {
+                            cancelOrder(this.username, [`${oid}`]).then(resp => {
+                                this.points = resp.profileProperties.points.total
+                            })
+                            this.refreshCollect()
+                        }
+                    })
+            },
+            changeUser() {
+                let name = this.username
+                this.refreshCollect()
+                viewProduct(this.username, this.productList.map(e => e.productId))
+                    .then(resp => {
+                        this.points = resp.profileProperties.points.total
+                    })
+            }
+        }
+    })
+    const tmpl = {
+        requiredProfileProperties: ["*"],
+        events: [{
+            eventType: "prodOrderEvent",
+            scope: "points",
+            source: {
+                scope: "points",
+                itemId: location.pathname,
+                itemType: "page",
+                properties: {
+                    pageInfo: {
+                        destinationURL: location.herf,
+                        tags: [],
+                        categories: [],
+                        pageName: location.pathname,
+                        pageID: location.pathname,
+                        pagePath: location.pathname,
+                        referringURL: ""
+                    },
+                    type: "confirmOrder",
+                }
+            }
+        }],
+        sessionId: "1"
+    }
+
+    //--------------------------
+    function send(e) {
+        console.log(JSON.stringify(e))
+        return unomi.post("/context.json", e)
+    }
+
+    //重新构建订单格式
+    function confirmOrder(name, orders) {
+        let e = {};
+        let type = "confirmOrder"
+        Object.assign(e, tmpl)
+        e.sessionId = name
+        e.events[0].source.properties.type = type
+        e.events[0].source.properties.orders = orders
+        return send(e)
+    }
+
+    // cancelOrder("admin",["65787af2e20c47889dfe937e1f7d4010","204e03cf00b04a2ab35b0e26c4241313","4d2e3f52f3f8478fbda8f8fe442e8ba3","2"])
+    function cancelOrder(name, orders) {
+        let e = {};
+        let type = "cancelOrder"
+        Object.assign(e, tmpl)
+        e.sessionId = name
+        e.events[0].source.properties.type = type
+        e.events[0].source.properties.cancelOrders = orders
+        return send(e)
+    }
+
+    function collectProduct(name, orders) {
+        let e = {};
+        let type = "collectProduct"
+        Object.assign(e, tmpl)
+        e.sessionId = name
+        e.events[0].source.properties.type = type
+        e.events[0].source.properties.collectProducts = orders
+        return send(e)
+    }
+
+    function cancelCollectProduct(name, orders) {
+        let e = {};
+        let type = "cancelCollectProduct"
+        Object.assign(e, tmpl)
+        e.sessionId = name
+        e.events[0].source.properties.type = type
+        e.events[0].source.properties.cancelCollectProducts = orders
+        return send(e)
+    }
+
+    function viewProduct(name, orders) {
+        let e = {};
+        let type = "viewProduct"
+        Object.assign(e, tmpl)
+        e.sessionId = name
+        e.events[0].source.properties.type = type
+        e.events[0].source.properties.viewProducts = orders
+        return send(e)
+    }
+
+    // resetTotal("admin")
+    function resetTotal(name) {
+        let e = {};
+        let type = "reset"
+        Object.assign(e, tmpl)
+        e.sessionId = name
+        e.events[0].source.properties.type = type
+        return send(e)
+    }
+
+    //--------------------------
+
+    //--------------------------
+</script>
+</body>
+</html>

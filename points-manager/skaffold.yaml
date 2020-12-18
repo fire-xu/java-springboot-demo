@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2beta5
+kind: Config
+build:
+  artifacts:
+    - image: points-manager
+      context: .
+      jib:
+        type: maven
+#      tagPolicy:
+
+
+## optional profile to run the jib build on Google Cloud Build
+#profiles:
+#  - name: gcb
+#    build:
+#      googleCloudBuild: {}
