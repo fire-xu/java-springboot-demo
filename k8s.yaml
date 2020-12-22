@@ -9,7 +9,7 @@ spec:
   type: NodePort
   ports:
   - port: 8080
-    nodePort: 30002
+    nodePort: 30002  #映射端口
   selector:
     app: jenkins-demo
 
@@ -22,10 +22,16 @@ metadata:
   labels:
     app: jenkins-demo
 spec:
-  replicas: 1
+  replicas: 4
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: jenkins-demo
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -36,7 +42,7 @@ spec:
         image: firexuxiaoman/jenkins-demo:<BUILD_TAG>
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080
+        - containerPort: 8080  #容器端口
         env:
         - name: branch
           value: <BRANCH_NAME>
