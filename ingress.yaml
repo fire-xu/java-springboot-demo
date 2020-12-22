@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: java-demo
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: java.demo.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jenkins-demo
+          servicePort: 8080

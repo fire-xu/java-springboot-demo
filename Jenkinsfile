@@ -52,6 +52,7 @@ pipeline {
 		steps {
         echo "7. Deploy To K8s Stage"
         sh 'kubectl apply -f k8s.yaml --record'
+		sh 'kubectl apply -f ingress.yaml --record'
         }
   }
 	}
