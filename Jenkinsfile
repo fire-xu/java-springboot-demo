@@ -3,7 +3,7 @@ pipeline {
         label "haimaxy-jnlp"
     }
     stages {
-        stage('Clone Code') {
+        stage('Clone') {
             steps {
                 echo "1.Git Clone Code"
                 checkout scm
@@ -15,14 +15,19 @@ pipeline {
             }
         }
 		}
-        stage('Maven Build') {
+        stage('Maven') {
             steps {
                 echo "2.Maven Build Stage"
                 sh 'mvn -B clean package -Dmaven.test.skip=true'
+            }
+        }
+		stage('Sonar') {
+            steps {
+                echo "2.Sonar Stage"
                 sh 'mvn sonar:sonar -Dsonar.host.url=http://192.168.6.150:8050 -Dsonar.login=d6c8fb1706d3d5824db5ea1c9d9101d0b47801eb'
             }
         }
-        stage('Image Build') {
+        stage('Image') {
             steps {
             echo "3.Image Build Stage"
             sh 'ls -l'
