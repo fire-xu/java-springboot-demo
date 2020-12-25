@@ -38,7 +38,7 @@ pipeline {
         stage('Push') {
             steps {
             echo "4.Push Docker Image Stage"
-            sh "docker login -u fire -p Pass1234"
+            sh "docker login -u fire -p Pass1234 reg.analyticservice.net "
             sh "docker push 192.168.6.200/jenkins/jenkins-demo:${build_tag}"
             }
         }
