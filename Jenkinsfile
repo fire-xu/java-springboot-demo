@@ -32,6 +32,7 @@ pipeline {
             echo "3.Image Build Stage"
             sh 'ls -l'
             sh "docker build -t firexuxiaoman/jenkins-demo:${build_tag} ."
+			sh "docker tag firexuxiaoman/jenkins-demo:${build_tag} 192.168.6.200/jenkins/jenkins-demo:${build_tag}"
             }
         }
         stage('Push') {
