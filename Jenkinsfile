@@ -37,8 +37,8 @@ pipeline {
         stage('Push') {
             steps {
             echo "4.Push Docker Image Stage"
-            sh "docker login -u firexuxiaoman -p Pass123456789"
-            sh "docker push firexuxiaoman/jenkins-demo:${build_tag}"
+            sh "docker login -u fire -p Pass1234"
+            sh "docker push 192.168.6.200/jenkins/jenkins-demo:${build_tag}"
             }
         }
         stage('YAML') {
