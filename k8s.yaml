@@ -38,6 +38,8 @@ spec:
       labels:
         app: jenkins-demo
     spec:
+      magePullSecrets:
+      - name: harbor 
       containers:
       - name: k8s-demo
         image: firexuxiaoman/jenkins-demo:<BUILD_TAG>
