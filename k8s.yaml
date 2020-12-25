@@ -38,11 +38,11 @@ spec:
       labels:
         app: jenkins-demo
     spec:
-      magePullSecrets:
+        imagePullSecrets:
       - name: harbor 
       containers:
       - name: k8s-demo
-        image: firexuxiaoman/jenkins-demo:<BUILD_TAG>
+        image: reg.analyticservice.net/jenkins/jenkins-demo:<BUILD_TAG>
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080  #容器端口
