@@ -61,35 +61,31 @@ pipeline {
 		sh 'kubectl apply -f ingress.yaml --record'
         }
   }
+       
+	}
+	
+	}
+		pipeline {
+    stages {
         stage('jira') {
-		steps {
-              comment_issues()
+            steps {
+                comment_issues()
             }
+        }
+    }
 }
-	}
-	
-	}
-		void comment_issues() {
-		def issue_pattern = "[a-zA-Z]([a-zA-Z]+)-\\d+"
-		// Find all relevant commit ids 
-		currentBuild.changeSets.each { ChangeSet ->
-			changeSet.each{ commit ->
-				String email = commit.getAuthorEmail()
-				echo 'The Last commit was written by ' + email
-				String committer = email.split('@')[0].trim()
-				string commitID = commit.getCommitID()
-				string msg = commit.getMSg()
-				echo msg
-				def comment = [body: msg]
-				msg.fingAll(issue_pattern).each {id ->
-				echo 'issue:' +id
-				// post the comment
 
-		}
-		
-		}
-		}
+void comment_issues() {
+    def issue_pattern = "[a-zA-Z]([a-zA-Z]+)-\\d+"
+
+    // Find all relevant commit ids
+    currentBuild.changeSets.each {changeSet ->
+        changeSet.each { commit ->
+            String msg = commit.getMsg()
+            msg.findAll(issue_pattern).each {
+                // Actually post a comment
+                id -> jiraAddComment idOrKey: id, comment: 'Hi there!'
+            }
+        }
+    }
 }
-	
- 
- 
