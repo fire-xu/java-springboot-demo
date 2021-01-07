@@ -61,19 +61,14 @@ pipeline {
 		sh 'kubectl apply -f ingress.yaml --record'
         }
   }
-       
-	}
-	
-	}
-		pipeline {
-    stages {
         stage('jira') {
             steps {
                 comment_issues()
             }
-        }
-    }
-}
+	}
+	}
+	}
+   
 
 void comment_issues() {
     def issue_pattern = "[a-zA-Z]([a-zA-Z]+)-\\d+"
