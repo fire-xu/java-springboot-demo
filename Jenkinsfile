@@ -81,7 +81,7 @@ pipeline {
 				echo 'issue:' +id
 				def ts = new Date(commit.get Timestamp())
 				// post the comment
-				  
+				 
 
 
 
