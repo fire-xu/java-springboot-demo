@@ -62,9 +62,9 @@ pipeline {
         }
   }
         stage('jira') {
-		steps{
-		echo "8.jira"
-		}
+		steps {
+              comment_issues()
+            }
 }
 	}
 	
@@ -84,16 +84,7 @@ pipeline {
 				msg.fingAll(issue_pattern).each {id ->
 				echo 'issue:' +id
 				// post the comment
-				 
 
-
-
-			
-			
-			
-			
-			
-		
 		}
 		
 		}
