@@ -79,7 +79,6 @@ pipeline {
 				def comment = [body: msg]
 				msg.fingAll(issue_pattern).each {id ->
 				echo 'issue:' +id
-				def ts = new Date(commit.get Timestamp())
 				// post the comment
 				 
 
