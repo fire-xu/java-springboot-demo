@@ -65,6 +65,7 @@ pipeline {
 		steps{
 		echo "8.jira"
 		}
+}
 		void comment_issues() {
 		def issue_pattern = "[a-zA-Z]([a-zA-Z]+)-\\d+"
 		// Find all relevant commit ids 
@@ -88,7 +89,7 @@ pipeline {
 			
 			
 			
-			}
+			
 		
 		}
 		
