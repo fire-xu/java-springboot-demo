@@ -1,7 +1,10 @@
 pipeline {
     agent {
-        label "haimaxy-jnlp"
-    }
+       label "haimaxy-jnlp"
+	}
+	
+	environment {
+        JIRA_SITE='aasjira'}
     stages {
         stage('Clone') {
             steps {
@@ -63,6 +66,7 @@ pipeline {
   }
         stage('jira') {
             steps {
+			withEnv(['JIRA_SITE=AASjenkins']){
                 comment_issues()
             }
 	}
@@ -70,6 +74,7 @@ pipeline {
 	}
    
 
+@NonCPS
 void comment_issues() {
     def issue_pattern = "[a-zA-Z]([a-zA-Z]+)-\\d+"
 
@@ -77,10 +82,21 @@ void comment_issues() {
     currentBuild.changeSets.each {changeSet ->
         changeSet.each { commit ->
             String msg = commit.getMsg()
+			String email = commit .getAuthorEmail()
+			String committer = email.split('@')[0].trim()
+			String commitId = commit.getCommitId()
             msg.findAll(issue_pattern).each {
-                // Actually post a comment
-                id -> jiraAddComment idOrKey: id, comment: 'Hi there!'
+                // Actually post a comment	
+                id -> 
+				        def ts = new Date(commit.getTimestamp())
+            			def comment = [ body: msg + '\n' +
+            			'Current Build: ' + '[' + currentBuild.number +' | '+ currentBuild.absoluteUrl +']\n' +
+            			'Git Commit ID: ' + '[' + commitId + '|https://gogs.analyticservice.net/fire.xu/python-jemo/commit/'+commitId + ']\n' +
+            			'Author: 		' + '[~'+ committer + ']\n' +
+						'Timestamp:		' + ts.format('yyyy/MM/DD HH:mm:ss')+ '\n' +
+            			'Files:			' + commit.getAffectedPaths() ]
+            			  jiraAddComment idOrKey: id, input: comment 
             }
         }
     }
-}
+}	
