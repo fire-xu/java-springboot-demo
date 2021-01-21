@@ -24,7 +24,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package -Dmaven.test.skip=true --file pom.xml
     - name: BuildDockerImage
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag my-image-name:v1.0
     - name: Publish to Docker Repository
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
