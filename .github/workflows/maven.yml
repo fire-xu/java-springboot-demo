@@ -26,7 +26,7 @@ jobs:
     - name: BuildDockerImage
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
     - name: Publish to Docker Repository
-      uses: elgohr/Publish-Docker-Github-Action@main
+      uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: firexuxiaoman/jenkins-demo
         username: ${{ secrets.DOCKER_NAME }}
