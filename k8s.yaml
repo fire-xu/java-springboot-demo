@@ -9,7 +9,7 @@ spec:
   type: NodePort
   ports:
   - port: 8080
-    nodePort: 30002  #映射端口
+    nodePort: 30002  #映e射端口
   selector:
     app: jenkins-demo
 
