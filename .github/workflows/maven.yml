@@ -30,6 +30,7 @@ jobs:
         run:  |
             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
        #     mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}  
+        run: sed -i 's/<BUILD_TAG>/$GITHUB_RUN_NUMBER/' k8s.yaml
       - name: Push Docker
         run: |
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
