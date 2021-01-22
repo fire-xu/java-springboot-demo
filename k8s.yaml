@@ -38,14 +38,15 @@ spec:
       labels:
         app: jenkins-demo
     spec:
-      imagePullSecrets:
-      - name: harbor
+  #    imagePullSecrets:
+   #   - name: harbor
       containers:
       - name: k8s-demo
-        image: reg.analyticservice.net/jenkins/jenkins-demo:<BUILD_TAG>
+#        image: reg.analyticservice.net/jenkins/jenkins-demo:<BUILD_TAG>
+        image: firexuxiaoman/jenkins-demo:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080  #容器端口
-        env:
-        - name: branch
-          value: <BRANCH_NAME>
+  #      env:
+  #      - name: branch
+   #       value: <BRANCH_NAME>
