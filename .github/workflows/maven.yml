@@ -19,6 +19,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PWD }}
+        port: ${{ secrets.PORT }}
+        source: "k8s.yaml,home/k8s1.yaml"
+        target: "home"
       - name: Build with Maven
  # 这里maven的打包命令, 其他项目修改为对应的打包命令
         run:  |
