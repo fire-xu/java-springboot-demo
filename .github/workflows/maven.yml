@@ -23,7 +23,7 @@ jobs:
  # 这里maven的打包命令, 其他项目修改为对应的打包命令
         run:  |
             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
-            mvn sonar:sonar -Dsonar.host.url=http://101.227.90.187:31672/ -Dsonar.login=59ce5e1467f566178c40fee9e5bee51d59fe4f67
+            mvn sonar:sonar -Dsonar.host.url=http://101.227.90.187:31672/ -Dsonar.login=a8390a8b7e19f64889abb9748e72347ffae1ca43
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
