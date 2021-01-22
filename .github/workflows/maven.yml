@@ -27,3 +27,15 @@ jobs:
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
           docker build . -t firexuxiaoman/jenkins-demo:$GITHUB_RUN_NUMBER
           docker push firexuxiaoman/jenkins-demo:$GITHUB_RUN_NUMBER
+      - name: Deloy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PWD }}
+          port: ${{ secrets.PORT }}
+          script: |
+                docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
+                docker pull firexuxiaoman/jenkins-demo:$GITHUB_RUN_NUMBER
+      
+       
