@@ -19,20 +19,20 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: copy file via ssh password
+      - name: Build with Maven
+ # 这里maven的打包命令, 其他项目修改为对应的打包命令
+        run:  |
+            mvn -B clean package --file pom.xml -Dmaven.test.skip=true
+            mvn sonar:sonar -Dsonar.host.url=http://101.227.90.187:31672/ -Dsonar.login=59ce5e1467f566178c40fee9e5bee51d59fe4f67
+           - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USER }}
             password: ${{ secrets.PWD }}
             port: ${{ secrets.PORT }}
-            source: "k8s.yaml,home/k8s1.yaml"
-            target: "home"
-      - name: Build with Maven
- # 这里maven的打包命令, 其他项目修改为对应的打包命令
-        run:  |
-            mvn -B clean package --file pom.xml -Dmaven.test.skip=true
-            mvn sonar:sonar -Dsonar.host.url=http://101.227.90.187:31672/ -Dsonar.login=59ce5e1467f566178c40fee9e5bee51d59fe4f67
+            source: "k8s.yaml,/home/k8s.yaml"
+            target: "/home"      
       - name: Push Docker
         run: |
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
