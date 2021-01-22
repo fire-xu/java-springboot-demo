@@ -36,6 +36,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
                 docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
-                docker pull firexuxiaoman/jenkins-demo:$GITHUB_RUN_NUMBER
+                docker pull firexuxiaoman/jenkins-demo:latest
       
        
