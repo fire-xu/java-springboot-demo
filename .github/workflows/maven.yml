@@ -47,6 +47,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
                 docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
+                docker rmi -f $(docker images firexuxiaoman/jenkins-demo:latest -q)	
                 docker pull firexuxiaoman/jenkins-demo:latest
                 cd /home 
                 kubectl apply -f k8s.yaml --record 
