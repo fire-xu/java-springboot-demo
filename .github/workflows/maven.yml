@@ -28,7 +28,7 @@ jobs:
       - name: Build with Maven
  # 这里maven的打包命令, 其他项目修改为对应的打包命令
         run:  |
-            sed -i 's/<BUILD_TAG>/$GITHUB_RUN_NUMBER/' k8s.yaml
+            sed -i 's/<BUILD_TAG>/${GITHUB_RUN_NUMBER}/' k8s.yaml
             cat k8s.yaml
             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
        #     mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}  
