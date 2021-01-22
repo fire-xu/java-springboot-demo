@@ -31,8 +31,7 @@ jobs:
             username: ${{ secrets.USER }}
             password: ${{ secrets.PWD }}
             port: ${{ secrets.PORT }}
-            source: "k8s.yaml,/home/k8s.yaml" 
-            source: "ingress.yaml,/home/ingress.yaml"
+            source: "k8s.yaml ingress.yaml,/home/" 
             target: "/home"      
       - name: Push Docker
         run: |
