@@ -30,7 +30,7 @@ jobs:
         docker push firexuxiaoman/jenkins-demo::$GITHUB_RUN_NUMBER
 
         
-pull-docker:
+    pull-docker:
     needs: [build]
     name: Pull Docker
     runs-on: ubuntu-latest
