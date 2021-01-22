@@ -23,13 +23,12 @@ jobs:
  # 这里maven的打包命令, 其他项目修改为对应的打包命令
         run:  |
             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
-       #  mvn sonar:sonar -Dsonar.host.url=http://101.227.90.187:31672/ -Dsonar.login=a8390a8b7e19f64889abb9748e72347ffae1ca43   
+            mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}  
       - name: Push Docker
         run: |
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
-          docker build . -t firexuxiaoman/jenkins-demo:$GITHUB_RUN_NUMBER
-          docker push firexuxiaoman/jenkins-demo:$GITHUB_RUN_NUMBER
-          sed -i 's/<GITHUB_RUN_NUMBER>/$GITHUB_RUN_NUMBER/' k8s.yaml
+          docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
+          docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
@@ -47,7 +46,10 @@ jobs:
           password: ${{ secrets.PWD }}
           port: ${{ secrets.PORT }}
           script: |
-                docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}	
+                docker stop $(docker ps --filter ancestor=${{ secrets.REGISTRY }} -q)
+                docker rm -f $(docker ps -a --filter ancestor=${{ secrets.REGISTRY }}:latest -q)
+                docker rmi -f $(docker images  ${{ secrets.REGISTRY }}:latest -q)
+                docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
                 cd /home 
                 kubectl apply -f k8s.yaml --record 
                 kubectl apply -f ingress.yaml --record

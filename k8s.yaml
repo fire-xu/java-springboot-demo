@@ -43,7 +43,7 @@ spec:
       containers:
       - name: k8s-demo
 #        image: reg.analyticservice.net/jenkins/jenkins-demo:<BUILD_TAG>
-        image: firexuxiaoman/jenkins-demo:<GITHUB_RUN_NUMBER>
+        image: firexuxiaoman/jenkins-demo:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080  #容器端口
