@@ -43,6 +43,7 @@ jobs:
       - name: Push Docker
         run: |
           ls -l
+          cd test-demo
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
           docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
           docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
@@ -53,7 +54,7 @@ jobs:
             username: ${{ secrets.USER }}
             password: ${{ secrets.PWD }}
             port: ${{ secrets.PORT }}
-            source: "k8s.yaml,ingress.yaml" 
+            source: "test-demo/k8s.yaml,test-demo/ingress.yaml" 
             target: "/home"   
       - name: Deloy
         uses: appleboy/ssh-action@master
