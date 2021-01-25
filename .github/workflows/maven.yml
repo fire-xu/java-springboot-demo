@@ -42,6 +42,7 @@ jobs:
   # 这里开始push镜像，所有的敏设感内容，可以在本仓库设置里，设置秘钥变量替换
       - name: Push Docker
         run: |
+          ls -l
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
           docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
           docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
