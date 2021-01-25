@@ -34,6 +34,7 @@ jobs:
         run:  |
             git clone https://fire.xu:Pass1234@gogs.analyticservice.net/fire.xu/test-demo.git
             ls -l
+            cd test-demo
             sed -i "s/<BUILD_TAG>/$GITHUB_RUN_NUMBER/" k8s.yaml
             cat k8s.yaml
             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
