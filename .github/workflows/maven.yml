@@ -14,7 +14,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - actions/checkout@v2
+      - user: webfactory/ssh-agent@v0.4.1
+        with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Set up JDK 1.8
  # 这里使用java8的环境, 其他项目在github action中找到对应的语言环境就行
         uses: actions/setup-java@v1
