@@ -65,7 +65,7 @@ jobs:
           password: ${{ secrets.PWD }}
           port: ${{ secrets.PORT }}         
           script: |
-                    cd /home                        
+                    cd /home/test-demo/                       
                     kubectl apply -f k8s.yaml --record 
                     kubectl apply -f ingress.yaml --record
   #  上面我直接用k8s部署， 如果用docker部署，可以按下面的步骤，最后在docker run 一下就好了                 
