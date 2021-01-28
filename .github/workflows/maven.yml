@@ -44,7 +44,6 @@ jobs:
         run: |
           ls -l
           cd test-demo
-          ls -l
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
           docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
           docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
