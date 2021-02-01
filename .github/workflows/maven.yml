@@ -43,6 +43,7 @@ jobs:
       - name: Push Docker
         run: |
           ls -l
+          cat /etc/hosts
           cd test-demo
           docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
           docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
