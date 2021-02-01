@@ -40,13 +40,21 @@ jobs:
             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
        #     mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}  
   # 这里开始push镜像，所有的敏设感内容，可以在本仓库设置里，设置秘钥变量替换
-      - name: Push Docker
-        run: |
-          ls -l
-          cd test-demo
-          docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
-          docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
-          docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_NAME }}
+          password: ${{ secrets.DOCKER_PASS }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
+          push: true
+          tags: |
+            firexuxiaoman/test:latest
+            fire.xuxiaoman/test:1.0.0
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
