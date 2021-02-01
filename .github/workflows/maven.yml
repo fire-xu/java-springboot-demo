@@ -42,9 +42,7 @@ jobs:
   # 这里开始push镜像，所有的敏设感内容，可以在本仓库设置里，设置秘钥变量替换
       - name: Push Docker
         run: |
-          sudo cat >> /etc/hosts <<EOF
-          101.227.90.187 harbor.analyticservice.com 
-          EOF
+          whoami
           ls -l
           cat /etc/hosts
           cd test-demo
