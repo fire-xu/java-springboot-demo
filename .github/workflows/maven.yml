@@ -43,18 +43,12 @@ jobs:
       - name: Push Docker
         run: |
           whoami
-          sudo bash -c "cat > /etc/hosts" <<EOF
-          101.227.90.187 harbor.analyticservice.com
-          EOF
           ls -l
           cat /etc/hosts
           cd test-demo
-          docker login -u admin -p Pass1234 harbor.analyticservice.com
-          docker build . -t harbor.analyticservice.com/jenkins/jenkins-demo:$GITHUB_RUN_NUMBER
-          docker push harbor.analyticservice.com/jenkins/jenkins-demo:$GITHUB_RUN_NUMBER
-#         docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }} 
-#         docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
-#         docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
+          docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }} 
+          docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
+          docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
