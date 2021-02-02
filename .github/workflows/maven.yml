@@ -23,12 +23,12 @@ jobs:
    #     with:
   #        java-version: 1.8
  # 这里的步骤是用于缓存本地的mvn仓库，如果没有这一步，每次部署时都要重启下载依赖包。
-      - name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-            path: ~/.m2
-            key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-            restore-keys: ${{ runner.os }}-m2     
+  #    - name: Cache Maven packages
+   #     uses: actions/cache@v2
+  #      with:
+  #          path: ~/.m2
+   #         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+   #         restore-keys: ${{ runner.os }}-m2     
       - name: Build with Maven
  # 这里maven的打包命令, 其他项目修改为对应的打包命令，并替换k8s.yaml文件中的镜像，用于k8s的部署
         run:  |
