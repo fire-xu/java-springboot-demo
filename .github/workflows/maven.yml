@@ -49,7 +49,7 @@ jobs:
           ls -l
           cat /etc/hosts
           cd test-demo
-          docker login -u admin -p Pass1234 harbor.analyticservice.net 
+          docker login -u admin -p Pass1234 harbor.analyticservice.com
           docker build . -t harbor.analyticservice.com/jenkins/jenkins-demo:$GITHUB_RUN_NUMBER
           docker push harbor.analyticservice.com/jenkins/jenkins-demo:$GITHUB_RUN_NUMBER
 #         docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }} 
