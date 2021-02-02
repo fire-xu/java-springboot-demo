@@ -43,6 +43,9 @@ jobs:
       - name: Push Docker
         run: |
           whoami
+          sudo sudo bash -c "cat > /etc/hosts" <<EOF
+          101.227.90.187 harbor.analyticservice.com
+          EOF
           ls -l
           cat /etc/hosts
           cd test-demo
