@@ -19,6 +19,6 @@ jobs:
            git clone ${{ secrets.GOGS_REPO }}
     - name: Build with Maven
       env: 
-          JAVA_HOME: /usr/bin/java
+          JAVA_HOME: /usr/local/bin/actions-runner/_work/_tool/jdk/8.0.282/x64
           MAVEN_HOME: /usr/local/bin/maven/bin/mvn
       run:  /usr/local/bin/maven/bin/mvn -B clean package --file pom.xml -Dmaven.test.skip=true
