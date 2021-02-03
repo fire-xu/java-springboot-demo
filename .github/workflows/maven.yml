@@ -30,8 +30,12 @@ jobs:
   #       with:
   #           path: ~/.m2
   #           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-  #           restore-keys: ${{ runner.os }}-m2
-       - name: Build with Maven 
+  #           restore-keys: ${{ runner.os }}-m2 
+       - name: Set up Maven
+         uses: stCarolas/setup-maven@v4
+         with:
+              maven-version: 3.6.3 
+       - name: Build with Maven
  # 这里maven的打包命令, 其他项目修改为对应的打包命令，并替换k8s.yaml文件中的镜像，用于k8s的部署
          run:  |
               pwd
