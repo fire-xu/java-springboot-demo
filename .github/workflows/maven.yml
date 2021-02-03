@@ -32,13 +32,14 @@ jobs:
              restore-keys: ${{ runner.os }}-m2
        - name: Build with Maven
  # 这里maven的打包命令, 其他项目修改为对应的打包命令，并替换k8s.yaml文件中的镜像，用于k8s的部署
- #        run:  |
+         run:  |
+              ls -l
+              mvn -B clean package --file pom.xml -Dmaven.test.skip=true
   #           git clone ${{ secrets.GOGS_REPO }}
-  #           ls -l
+  #           ls -l 
   #           cd test-demo
   #           sed -i "s/<BUILD_TAG>/$GITHUB_RUN_NUMBER/" k8s.yaml
   #           cat k8s.yaml
-             mvn -B clean package --file pom.xml -Dmaven.test.skip=true
        #     mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
   # 这里开始push镜像，所有的敏设感内容，可以在本仓库设置里，设置秘钥变量替换
        - name: Push Docker
