@@ -34,7 +34,9 @@ jobs:
        - name: Build with Maven 
  # 这里maven的打包命令, 其他项目修改为对应的打包命令，并替换k8s.yaml文件中的镜像，用于k8s的部署
          run:  |
+              pwd
               ls -l
+              which mvn
               mvn -B clean package --file pom.xml -Dmaven.test.skip=true
   #           git clone ${{ secrets.GOGS_REPO }}
   #           ls -l 
