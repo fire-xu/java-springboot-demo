@@ -12,8 +12,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-   # runs-on: [self-hosted, linux, x64]
+   # runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
   #     - uses: actions/checkout@main
  #     - uses: webfactory/ssh-agent@v0.4.1
