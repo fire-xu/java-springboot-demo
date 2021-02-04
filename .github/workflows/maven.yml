@@ -50,4 +50,4 @@ jobs:
       run :  |
               pwd
               ls -l
-              rm -rf test-demo
+              rm -rf test-demo 
