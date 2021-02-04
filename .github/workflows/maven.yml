@@ -27,7 +27,7 @@ jobs:
            cd test-demo
            sed -i "s/<BUILD_TAG>/$GITHUB_RUN_NUMBER/" k8s.yaml
            cat k8s.yaml
-           mvn -B clean package --file pom.xml -Dmaven.test.skip=true
+           /usr/local/bin/maven/bin/mvn -B clean package --file pom.xml -Dmaven.test.skip=true
     - name :  Build with sonar
       run :  |
             cd test-demo 
@@ -50,3 +50,4 @@ jobs:
       run :  |
               pwd
               ls -l
+              rm -rf test-demo
