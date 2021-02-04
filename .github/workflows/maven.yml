@@ -47,3 +47,4 @@ jobs:
               cd test-demo               
               kubectl apply -f k8s.yaml --record 
               kubectl apply -f ingress.yaml --record
+ 
