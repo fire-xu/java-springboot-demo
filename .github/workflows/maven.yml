@@ -29,7 +29,11 @@ jobs:
            cat k8s.yaml
            /usr/local/bin/maven/bin/mvn -B clean package --file pom.xml -Dmaven.test.skip=true
     - name :  Build with sonar
-      run :  /usr/local/bin/maven/bin/mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      run :  |
+            ls -l
+            pwd
+            cd test-demo 
+            /usr/local/bin/maven/bin/mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     - name : Build and push docker images
       run :  |
             ls -l
