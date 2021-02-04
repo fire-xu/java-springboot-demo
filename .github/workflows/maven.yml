@@ -27,11 +27,9 @@ jobs:
            cd test-demo
            sed -i "s/<BUILD_TAG>/$GITHUB_RUN_NUMBER/" k8s.yaml
            cat k8s.yaml
-           /usr/local/bin/maven/bin/mvn -B clean package --file pom.xml -Dmaven.test.skip=true
+           mvn -B clean package --file pom.xml -Dmaven.test.skip=true
     - name :  Build with sonar
       run :  |
-            ls -l
-            pwd
             cd test-demo 
             /usr/local/bin/maven/bin/mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     - name : Build and push docker images
@@ -47,4 +45,8 @@ jobs:
               cd test-demo               
               kubectl apply -f k8s.yaml --record 
               kubectl apply -f ingress.yaml --record
- 
+    - name : cleanup
+      if  : ${{ always() }}
+      run :  |
+              pwd
+              ls -l
