@@ -14,7 +14,7 @@ jobs:
     runs-on: [self-hosted]
 
     steps:
-    - name: Set up JDK 1.8
+    - name: Clone Gogs  
       run:   |
            git clone ${{ secrets.GOGS_REPO }}
     - name: Build with Maven
@@ -25,4 +25,21 @@ jobs:
            ls -l
            pwd 
            cd test-demo
+           sed -i "s/<BUILD_TAG>/$GITHUB_RUN_NUMBER/" k8s.yaml
+           cat k8s.yaml
            /usr/local/bin/maven/bin/mvn -B clean package --file pom.xml -Dmaven.test.skip=true
+    - name :  Build with sonar
+      run :  /usr/local/bin/maven/bin/mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_ADD }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+    - name : Build and push docker images
+      run :  |
+            ls -l
+            cd test-demo
+            docker login --username=${{ secrets.DOCKER_NAME }} --password ${{ secrets.DOCKER_PASS }}
+            docker build . -t ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
+            docker push ${{ secrets.REGISTRY}}:$GITHUB_RUN_NUMBER
+    - name : Deploy project with k8s
+      run :  |
+              ls -l
+              cd test-demo               
+              kubectl apply -f k8s.yaml --record 
+              kubectl apply -f ingress.yaml --record
