@@ -1,5 +1,7 @@
 pipeline {
-     agent any
+     agent{
+        label "haimaxy-jnlp"
+	}
 	
 	environment {
         JIRA_SITE='aasjira'}
