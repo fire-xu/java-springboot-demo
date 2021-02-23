@@ -72,7 +72,7 @@ pipeline {
 	}
 	}
 	}
-   
+   }
 
 @NonCPS
 void comment_issues() {
